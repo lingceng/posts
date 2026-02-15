@@ -36,7 +36,7 @@ Let active_record.default_timezone be :utc is a better practice.
 Always save the utc to database.  
 It helps when you make a world-wide application.
 
-### Rails console datetime ouptut
+### Rails console datetime output
 
 Run following codes in rails console.
 

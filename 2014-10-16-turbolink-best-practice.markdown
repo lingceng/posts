@@ -122,7 +122,7 @@ every switch between them will cause `double load`.
 See the [code](https://github.com/rails/turbolinks/blob/master/lib%2Fassets%2Fjavascripts%2Fturbolinks.js.coffee#L231)
 to know the details
 
-{% codeblock lang:coffeescript %}
+```coffeescript
 extractTrackAssets = (doc) ->
   for node in doc.querySelector('head').childNodes when node.getAttribute?('data-turbolinks-track')?
     node.getAttribute('src') or node.getAttribute('href')
@@ -131,14 +131,14 @@ assetsChanged = (doc) ->
   loadedAssets ||= extractTrackAssets document
   fetchedAssets  = extractTrackAssets doc
   fetchedAssets.length isnt loadedAssets.length or intersection(fetchedAssets, loadedAssets).length isnt loadedAssets.length
-{% endcodeblock %}
+```
 
 One last rescue is to prevent turbolink jump by add `data-no-turbolink` tag.
 And then you will not benefit from turbolink speed boost.
 
-{% codeblock lang:html %}
+```html
 <a href="/">Home (via Turbolinks)</a>
 <div id="some-div" data-no-turbolink>
   <a href="/">Home (without Turbolinks)</a>
 </div>
-{% endcodeblock %}
+```

@@ -13,7 +13,7 @@ I found there's a `to_json` and `as_json` method for active record query result.
 `to_json` returns String of json.
 `as_json` returns a hash representing the model.
 
-{% codeblock lang:ruby %}
+```ruby
 > Order.where(number: "201504211405490").to_json
 # => "[{\"production_status\":\"idle\",\"id\":11,\"number\":\"201504211405490\"}]"
 > Order.where(number: "201504211405490").to_json.class
@@ -27,18 +27,18 @@ I found there's a `to_json` and `as_json` method for active record query result.
 
 I find that `as_json` can accepts some optons.
 
-{% codeblock lang:ruby %}
+```ruby
 > Order.where(number: "201504211405490").as_json(only: :number)
 # => [{"number"=>"201504211405490"}]
-{% endcodeblock ruby%}
+```
 
 But one day I found somebody used similar options with `to_json` method.
 I searched the doc. No doc says `to_json` can do things like following:
 
-{% codeblock lang:ruby %}
+```ruby
 > Order.where(number: "201504211405490").to_json(only: :number)
 # => "[{\"number\":\"201504211405490\"}]"
-{% endcodeblock ruby%}
+```
 
 But the code above actually works.
 Is `to_json` uses `as_json` under the hood?
@@ -46,7 +46,7 @@ Is `to_json` uses `as_json` under the hood?
 ### Dive into the source
 Now we can check the source code to find the answer.
 
-{% codeblock lang:ruby %}
+```ruby
 > $ Order.where(number: "201504211405490").to_json
 
 From: /Users/lingceng/.rvm/gems/ruby-2.2.0@baozheng/gems/activesupport-4.2.0/lib/active_support/core_ext/object/json.rb @ line 31:
@@ -63,7 +63,7 @@ def to_json_with_active_support_encoder(options = nil)
     ActiveSupport::JSON.encode(self, options)
   end
 end
-{% endcodeblock ruby%}
+```
 
 Then we edit the method and add a **binding.pry** before the `if options.is_a?(::JSON::State)` line.
 **Remember to recover the change after debug.**

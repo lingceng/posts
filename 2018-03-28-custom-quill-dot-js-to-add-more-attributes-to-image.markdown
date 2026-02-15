@@ -10,7 +10,7 @@ Quill.js image default only allow 'src', 'alt' 'height' and 'width' attribute.
 Here are the solutions to add more attributes to image when initializing from fulltext html.  
 
 Solution1:
-{% codeblock lang:javascript %}
+```javascript
 class ImageBlot extends Image {
   static create(value) {
     if (typeof value == 'string') {
@@ -25,10 +25,10 @@ class ImageBlot extends Image {
   }
 }
 Quill.register(ImageBlot);
-{% endcodeblock %}
+```
 
 Solution2:
-{% codeblock lang:javascript %}
+```javascript
 class ImageBlot extends Image {
   static get ATTRIBUTES() {
     return [ 'alt', 'height', 'width', 'class', 'data-original', 'data-width', 'data-height', 'style-data' ]
@@ -56,7 +56,7 @@ class ImageBlot extends Image {
   }
 }
 Quill.register(ImageBlot);
-{% endcodeblock %}
+```
 
 You can specify the whitelist for attributes with solution2.  
 

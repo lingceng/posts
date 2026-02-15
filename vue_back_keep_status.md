@@ -1,4 +1,4 @@
-### OPTIMIZE: 进入详情页返回没有保持原来的页面状态
+# OPTIMIZE: 进入详情页返回没有保持原来的页面状态
 TLDR: 使用 vue-navigation 可以实现功能。
 
 方法一：使用 keep-alive 然后使用路由守卫刷新数据 #fix_expert_tab_alive_route
@@ -7,14 +7,16 @@ TLDR: 使用 vue-navigation 可以实现功能。
 beforeRouteEnter 执行较早，但里面的next会在mounted之后才执行
 https://segmentfault.com/a/1190000008923105
 
-    watch: {
-      expertId: 'getExpert',
-    },
-    beforeRouteEnter (to, from, next) {
-      next(vm => {
-        vm.expertId = to.query.id
-      })
-    }
+```javascript
+watch: {
+  expertId: 'getExpert',
+},
+beforeRouteEnter (to, from, next) {
+  next(vm => {
+    vm.expertId = to.query.id
+  })
+}
+```
 
 方法二：使用集中的状态管理，保持Tab的选中状态
 可能会有其他状态，例如滚动等，需要获取数据，这个方案不够通用。
@@ -23,10 +25,12 @@ https://segmentfault.com/a/1190000008923105
 默认 keep-alive 为 true，当跳转到非子页面时就设置为 false，跳转到子页面设置为 true 。
 发现缓存的那个页面不会刷新，从其他子页面跳转回来还是相同内容
 
-    beforeRouteLeave(to, from, next) {
-      from.meta.keepAlive = (to.name === 'Material')
-      next();
-    }
+```javascript
+beforeRouteLeave(to, from, next) {
+  from.meta.keepAlive = (to.name === 'Material')
+  next();
+}
+```
 
 方法四：使用 keep-alive 的include #fix_expert_tab_with_alive_include
 需要使用 vuex 管理缓存组件名字，还需要显示地给组件设置名称
@@ -35,14 +39,16 @@ https://juejin.im/post/5b407c2a6fb9a04fa91bcf0d
 但发现通过路由的方向不能准确判断前进或后退。
 例如，如果直接从 C 跳回 A，然后 A 再进入 B1，会显示到 B
 
-    beforeRouteLeave (to, from, next) {
-      if (to.name === 'Material') {
-        this.$store.commit('alive/keepAlive', from.name)
-      } else {
-        this.$store.commit('alive/noKeepAlive', from.name)
-      }
-      next()
-    }
+```javascript
+beforeRouteLeave (to, from, next) {
+  if (to.name === 'Material') {
+    this.$store.commit('alive/keepAlive', from.name)
+  } else {
+    this.$store.commit('alive/noKeepAlive', from.name)
+  }
+  next()
+}
+```
 
 尝试通过保持上一次路由，对比fullPath来判断是否是回退操作。
 非回退操作时需要先清除掉缓存再缓存新内容，需要研究keep-alive组件主动清除缓存的机制。
@@ -55,32 +61,35 @@ https://github.com/vuejs/vue/issues/6509
 
 测试用例:
 
-    回退场景   | B - C - B      | OK
-    同组件跳转 | B - B1 - B     | 不支持，因为不会触发 beforeRouteLeave
-    间隔同组件 | B - C - D - B1 | OK
+```
+回退场景   | B - C - B      | OK
+同组件跳转 | B - B1 - B     | 不支持，因为不会触发 beforeRouteLeave
+间隔同组件 | B - C - D - B1 | OK
+```
 
+```javascript
+beforeRouteLeave (to, from, next) {
+  store.commit('alive/pushRouterQuue', { router: from, instance: this })
+  next()
+}
 
-    beforeRouteLeave (to, from, next) {
-      store.commit('alive/pushRouterQuue', { router: from, instance: this })
-      next()
-    }
+paths.forEach((path) => {
+  if (path.keepAlive === true || path.keepAlive === 'OnBack') {
+    store.commit('alive/keepAlive', path.name)
+  }
+})
 
-    paths.forEach((path) => {
-      if (path.keepAlive === true || path.keepAlive === 'OnBack') {
-        store.commit('alive/keepAlive', path.name)
-      }
-    })
+router.beforeEach((to, from, next) => {
+  let preTwoPage = store.state.alive.routerQueue[1]
+  let isOnBack = preTwoPage && preTwoPage.router.meta.keepAlive === 'OnBack'
+  let isBack = preTwoPage && preTwoPage.router.fullPath === to.fullPath
+  if (isOnBack && !isBack) {
+    clearAliveCache(preTwoPage.instance)
+  }
 
-    router.beforeEach((to, from, next) => {
-      let preTwoPage = store.state.alive.routerQueue[1]
-      let isOnBack = preTwoPage && preTwoPage.router.meta.keepAlive === 'OnBack'
-      let isBack = preTwoPage && preTwoPage.router.fullPath === to.fullPath
-      if (isOnBack && !isBack) {
-        clearAliveCache(preTwoPage.instance)
-      }
-
-      next()
-    })
+  next()
+})
+```
 
 同组件跳转的场景只会触发 beforeRouteUpdate，不管是否 keep-alive。
 感觉 vue-router 和 vue 配合不太紧密，Router只负责把路由导航到某个组件
@@ -92,8 +101,8 @@ Vue中类似的组件是 keep-alive，keep-alive 能使*组件保持活跃*，�
 Keep-alive 通过 include 等方式在一次渲染中能选择保持或者不保持组件的活跃。
 
 使用 keep-alive 来实现回退不刷新需要这样处理。
-+ 要每次进入都要缓存组件，为回退不刷新做准备。
-+ 但在不是回退的场景，就需要刷新数据，并再次缓存。
+- 要每次进入都要缓存组件，为回退不刷新做准备。
+- 但在不是回退的场景，就需要刷新数据，并再次缓存。
 第二点 keep-alive 默认是比较难实现的，它只能选择刷新或者缓存，不能刷新之后再缓存。
 
 网上有通过 beforeRouteLeave 的路由方向来预测会不会有回退来设置活跃。

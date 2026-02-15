@@ -11,22 +11,22 @@ Here I have a table of change records in my rails app.
 And I have added a query for *created_at* with [ransack](https://github.com/activerecord-hackery/ransack).
 
 
-{% codeblock app/controllers/production_status_changes_controller.rb lang:ruby %}
+```ruby
 class ProductionStatusChangesController < PlainController
   def index
     @q = ProductionStatusChange.ransack(params[:q])
     @orders = @q.result.includes(:order).page(params[:page]).per(params[:per])
   end
 end
-{% endcodeblock %}
+```
 
-{% codeblock app/views/production_status_changes/index.html.erb lang:erb %}
+```erb
 <%= search_form_for @q, url: production_status_changes_path, class: 'form-inline' do |f| %>
   <%=  f.label 'Create At' %>
   <%= f.search_field :created_at_gteq, class: 'form-control input-sm', 'datepicker' => true %>
   <%= f.search_field :created_at_lteq, class: 'form-control input-sm', 'datepicker' => true %>
 <% end %>
-{% endcodeblock %}
+```
 
 ### The Problem
 Everything works fine until users start to use it.
@@ -39,7 +39,7 @@ They shout that there is a whole day from 2015-01-01 to 2015-01-01!
 ### Direct solution
 OK. Users are gods. So I add some codes in my controller:
 
-{% codeblock app/controllers/production_status_changes_controller.rb lang:ruby %}
+```ruby
 def index
   params[:q] ||= {}
   if params[:q][:created_at_lteq].present?
@@ -48,7 +48,7 @@ def index
   @q = ProductionStatusChange.ransack(params[:q])
   @orders = @q.result.includes(:order).page(params[:page]).per(params[:per])
 end
-{% endcodeblock %}
+```
 
 The *created_at_lteq* will convert to '2015-01-01 23:59'.
 
