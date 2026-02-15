@@ -19,9 +19,9 @@ Here we have a table named `user_statuses` like following
 
 I want to collect the status with follwing rule:
 
-+ Keep all [1-2] statuses
-+ Ignore other status above 2 if one has any [1-2] status
-+ keep only one ohter status above 2 if one do not has any [1-2] status
+- Keep all [1-2] statuses
+- Ignore other status above 2 if one has any [1-2] status
+- keep only one ohter status above 2 if one do not has any [1-2] status
 
 So the result should like following:
 

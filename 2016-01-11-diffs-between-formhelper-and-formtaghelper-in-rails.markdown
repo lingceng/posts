@@ -12,23 +12,23 @@ But their parameters act differently, which always bites me.
 For example, I have to wrap html options into a `html` key when I change from
 form_tag to form_for.
 
-{% codeblock lang:ruby %}
+```ruby
 = form_tag '/techloglogies/board', method: :get, class: 'form-inline'
 
 = form_for @search, url: '/techloglogies/board', method: :get, html: { class: 'form-inline' }
-{% endcodeblock %}
+```
 
 And as the 3rd parameter of `f.select`  is _options_ than _html_options_.
 So I have to add an empty hash `{}` there to skip it.
 
-{% codeblock lang:ruby %}
+```ruby
 = select_tag 'step',
   options_for_select(Order::PURE_STEPS.invert, params[:step]),
   class: 'form-control input-sm', style: 'width: 100px'
 
 = f.select :step, Order::PURE_STEPS.invert, {},
   class: 'form-control input-sm', style: 'width: 100px'
-{% endcodeblock %}
+```
 
 ## Why they acts differently? Isn't f.select built on select_tag?
 **The short answer is NO.** f.select is not built on select_tag.
@@ -36,7 +36,7 @@ Let's dig into the source.
 
 ### Here's where form_for defined.
 
-{% codeblock lang:ruby %}
+```ruby
 module ActionView::Helper::FormHelper
 
   def text_field(object_name, method, options = {})
@@ -47,14 +47,14 @@ module ActionView::Helper::FormHelper
     ...
   end
 end
-{% endcodeblock %}
+```
 
 In FormHelper above also defined a class named ActionView::Helpers::FormBuilder.
 The form_for uses the FormBuilder.
 
 Most methods in FormHelper are delegated by FormBuilder.
 
-{% codeblock lang:ruby %}
+```ruby
 # in FormBuilder
 def #{selector}(method, options = {})  # def text_field(method, options = {})
   @template.send(                      #   @template.send(
@@ -63,7 +63,7 @@ def #{selector}(method, options = {})  # def text_field(method, options = {})
     method,                            #     method,
     objectify_options(options))        #     objectify_options(options))
 end                                    # end
-{% endcodeblock %}
+```
 
 Unlike text_field, select helper defined in ActionView::Helpers::FormOptionsHelper.
 And a select method in FormBuilder delegates the FormOptionsHelper#select.
@@ -74,11 +74,11 @@ text_field or select finnally use classes under module ActionView::Helpers::Tags
 **ActionView::Helper::FormTagHelper seems totally another implement.**
 Most tags helper are component directly in the methods. eg.
 
-{% codeblock lang:ruby %}
+```ruby
 def text_field_tag(name, value = nil, options = {})
   tag :input, { "type" => "text", "name" => name, "id" => sanitize_to_id(name), "value" => value }.update(options.stringify_keys)
 end
-{% endcodeblock %}
+```
 
 select_tag and FormBuilder#select do dot shere the implement.
 They implement the include_blank and other options separately.

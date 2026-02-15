@@ -38,7 +38,7 @@ So, how about re-use the table in the view?
 I find out that [render\_to\_string](http://devdocs.io/rails/abstractcontroller/rendering#method-i-render_to_string) can help me do the job.
 
 
-{% codeblock plain_controller.rb lang:ruby %}
+```ruby
 def generate_csv_data(template = nil)
   template ||= "#{controller_name}/#{action_name}.html.slim"
   content = render_to_string(template)
@@ -56,7 +56,7 @@ end
 
 # Respond csv file when csv format requested
 format.csv { send_data generate_csv_data }
-{% endcodeblock %}
+```
 
 Here I get the view page as a string. And extract the table in the string with [nokogiri](http://www.nokogiri.org/).
 We can also convert it into an excel easily.

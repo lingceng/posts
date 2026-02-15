@@ -16,11 +16,11 @@ Learn to cross The Great Wall if you are in China.
 Then we can do following things.
 
 ### Keep up with news
-+ rubyweekly
-+ rubyinside
-+ rubynews
-+ reddit/r/ruby
-+ reddit/r/rails
+-rubyweekly
+-rubyinside
+-rubynews
+-reddit/r/ruby
+-reddit/r/rails
 
 ### Know the persons
 Persons in ruby community are kind.  
@@ -28,18 +28,18 @@ They do speeches, write blogs and publish books.
 Follow them on twitter to get news about them.  
 Add their blogs to RSS reader.
 
-+ Aaron Patterson
-+ DHH
-+ Dave Tomas https://en.wikipedia.org/wiki/Dave_Thomas_(programmer) 
-+ http://blog.arkency.com/
-+ https://github.com/orgs/rails/people
-+ Github search with: language:Ruby followers:>300
+-Aaron Patterson
+-DHH
+-Dave Tomas https://en.wikipedia.org/wiki/Dave_Thomas_(programmer) 
+-http://blog.arkency.com/
+-https://github.com/orgs/rails/people
+-Github search with: language:Ruby followers:>300
 
 ### Involve in
-+ Read the source code of projects
-+ Report issues and fix bugs
-+ Maintain your open source project
-+ Share by blogs, speeches and books
+-Read the source code of projects
+-Report issues and fix bugs
+-Maintain your open source project
+-Share by blogs, speeches and books
 
 
 

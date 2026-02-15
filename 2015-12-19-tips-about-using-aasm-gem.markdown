@@ -11,7 +11,7 @@ Here I have some tips about using aasm gem.
 
 I'm using aasm 4.5.0 and rails 4.2.0. First, I post a snippet here for better explaination.
 
-{% codeblock order.rb lang:ruby %}
+```ruby
 class Order
   include AASM
 
@@ -34,7 +34,7 @@ class Order
 
   ...
 end
-{% endcodeblock %}
+```
 
 ## How to keep actions in transaction?
 Of course, you can acheive it by wrapping actions in a transaction. eg.
