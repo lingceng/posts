@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Vue返回保持页面状态的实现方法"
+date: 2024-09-02
+---
+
 # OPTIMIZE: 进入详情页返回没有保持原来的页面状态
 TLDR: 使用 vue-navigation 可以实现功能。
 
