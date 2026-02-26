@@ -23,7 +23,7 @@ I found there's a `to_json` and `as_json` method for active record query result.
 # => [{"production_status"=>"idle", "id"=>11, "number"=>"201504211405490"}]
 > Order.where(number: "201504211405490").as_json.class
 # => Hash
-{% endcodeblock ruby %}
+```
 
 I find that `as_json` can accepts some optons.
 
