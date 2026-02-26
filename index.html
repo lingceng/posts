@@ -1,0 +1,82 @@
+---
+layout: default
+title: 技术博客
+---
+
+<div class="home">
+  <h1>{{ site.title }}</h1>
+  <p>{{ site.description }}</p>
+
+  <h2>文章列表</h2>
+
+  <ul class="post-list">
+    {% for post in site.posts %}
+      <li>
+        <span class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</span>
+        <h3>
+          <a class="post-link" href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+        </h3>
+        {% if post.excerpt %}
+          <p>{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+  }
+
+  h1 {
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+  }
+
+  h2 {
+    color: #555;
+    margin-top: 40px;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .post-list li {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .post-meta {
+    color: #999;
+    font-size: 14px;
+  }
+
+  .post-list h3 {
+    margin: 5px 0;
+  }
+
+  .post-link {
+    color: #0366d6;
+    text-decoration: none;
+  }
+
+  .post-link:hover {
+    text-decoration: underline;
+  }
+
+  .post-list p {
+    color: #666;
+    margin: 10px 0 0 0;
+  }
+</style>
