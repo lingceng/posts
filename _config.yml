@@ -2,6 +2,9 @@ title: 技术博客
 description: 记录编程学习与实践
 author: lingceng
 
+# 使用 Jekyll 默认主题
+theme: minima
+
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
