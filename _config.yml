@@ -1,13 +1,7 @@
-# 站点基本信息
 title: 技术博客
 description: 记录编程学习与实践
 author: lingceng
 
-# Jekyll 设置
-markdown: kramdown
-permalink: /:year/:month/:day/:title/
-
-# 插件（GitHub Pages 默认支持）
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
